@@ -3,21 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Vanila JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Lubny chat</h1>
+<div class="container">
+    <h1>Lubny chat</h1>
     <div>
         <input type="text" placeholder="Your name" id="nameInput">
-        <input type="button" id="nameButton"  value="OK">
+        <button type="button" class="btn btn-info" id="nameButton" >Ok</button>
     </div>
-    <ul id="messages"></ul>
-    <div>
-        <textarea id="text" col="30" rows="10"></textarea>
-        <input type="button" id="textSubmit" value="Send">
+    <div class="well">
+        <ul id="messages"></ul>
     </div>
+
+    <form>
+        <div class="form-group">
+            <label for="text">Comment:</label>
+            <textarea class="form-control" rows="5" id="text"></textarea>
+            <button type="button" class="btn btn-success" id="textSubmit">Send</button>
+        </div>
+    </form>
+
+
+</div>
 </body>
 <script type="text/javascript">
-    (function(){
+    (function () {
         var nameButton = document.getElementById('nameButton');
         var nameInput = document.getElementById('nameInput');
         var messages = document.getElementById('messages');
@@ -45,7 +57,8 @@
         var ajaxRequest = function (options) {
             var url = options.url || '/';
             var method = options.method || 'GET';
-            var callback = options.callback || function(){};
+            var callback = options.callback || function () {
+                    };
             var data = options.data || {};
             xmlHttp = new XMLHttpRequest();
 
@@ -53,12 +66,12 @@
             xmlHttp.setRequestHeader('Content-Type', 'application/json');
             xmlHttp.send(JSON.stringify(data));
             xmlHttp.onreadystatechange = function () {
-                if(xmlHttp.status == 200 && xmlHttp.readyState == 4){
+                if (xmlHttp.status == 200 && xmlHttp.readyState == 4) {
                     callback(xmlHttp.responseText);
                 }
             };
         };
-        
+
         var getData = function () {
             ajaxRequest({
                 url: '/messages',
@@ -66,8 +79,8 @@
                 callback: function (msg) {
                     var msg = JSON.parse(msg);
                     messages.innerHTML = '';
-                    for(var i in msg){
-                        if(msg.hasOwnProperty(i)){
+                    for (var i in msg) {
+                        if (msg.hasOwnProperty(i)) {
                             var el = document.createElement('li');
                             el.innerText = msg[i].name + ': ' + msg[i].data;
                             messages.appendChild(el);
@@ -77,7 +90,7 @@
 
                 }
             })
-            
+
         }
 
         getData();
