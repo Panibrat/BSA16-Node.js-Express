@@ -16,4 +16,74 @@
         <input type="button" id="textSubmit" value="Send">
     </div>
 </body>
+<script type="text/javascript">
+    (function(){
+        var nameButton = document.getElementById('nameButton');
+        var nameInput = document.getElementById('nameInput');
+        var messages = document.getElementById('messages');
+        var text = document.getElementById('text');
+        var textSubmit = document.getElementById('textSubmit');
+
+        var userName = "UnknownUser";
+        nameButton.onclick = function () {
+            userName = nameInput.value || 'XXX';
+        };
+
+        textSubmit.onclick = function () {
+            var data = {
+                name: userName,
+                data: text.value
+            };
+            text.value = '';
+            ajaxRequest({
+                method: 'POST',
+                url: '/messages',
+                data: data
+            })
+        };
+
+        var ajaxRequest = function (options) {
+            var url = options.url || '/';
+            var method = options.method || 'GET';
+            var callback = options.callback || function(){};
+            var data = options.data || {};
+            xmlHttp = new XMLHttpRequest();
+
+            xmlHttp.open(method, url, true);
+            xmlHttp.setRequestHeader('Content-Type', 'application/json');
+            xmlHttp.send(JSON.stringify(data));
+            xmlHttp.onreadystatechange = function () {
+                if(xmlHttp.status == 200 && xmlHttp.readyState == 4){
+                    callback(xmlHttp.responseText);
+                }
+            };
+        };
+        
+        var getData = function () {
+            ajaxRequest({
+                url: '/messages',
+                method: 'GET',
+                callback: function (msg) {
+                    var msg = JSON.parse(msg);
+                    messages.innerHTML = '';
+                    for(var i in msg){
+                        if(msg.hasOwnProperty(i)){
+                            var el = document.createElement('li');
+                            el.innerText = msg[i].name + ': ' + msg[i].data;
+                            messages.appendChild(el);
+
+                        }
+                    }
+
+                }
+            })
+            
+        }
+
+        getData();
+        setInterval(function () {
+            getData();
+        }, 5000);
+    })();
+</script>
 </html>
