@@ -5,6 +5,7 @@
     <title>Vanila JS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 </head>
 <body>
 <div class="container">
@@ -39,6 +40,9 @@
         var textSubmit = document.getElementById('textSubmit');
 
         var userName = "UnknownUser";
+        //var socket = io.connect('wss://192.168.0.107');
+        var socket = io.connect();
+
         nameButton.onclick = function () {
             userName = nameInput.value || 'XXX';
         };
@@ -49,30 +53,18 @@
                 data: text.value
             };
             text.value = '';
-            ajaxRequest({
-                method: 'POST',
-                url: '/messages',
-                data: data
-            })
+            socket.emit('chat message', data);
         };
 
-        var ajaxRequest = function (options) {
-            var url = options.url || '/';
-            var method = options.method || 'GET';
-            var callback = options.callback || function () {
-                    };
-            var data = options.data || {};
-            xmlHttp = new XMLHttpRequest();
+        socket.on('chat history', function (messages) {
 
-            xmlHttp.open(method, url, true);
-            xmlHttp.setRequestHeader('Content-Type', 'application/json');
-            xmlHttp.send(JSON.stringify(data));
-            xmlHttp.onreadystatechange = function () {
-                if (xmlHttp.status == 200 && xmlHttp.readyState == 4) {
-                    callback(xmlHttp.responseText);
-                }
-            };
-        };
+        });
+
+        socket.on('chat message', function (msg) {
+
+        });
+
+
 
         var getData = function () {
             ajaxRequest({
@@ -96,10 +88,7 @@
 
         }
 
-        getData();
-        setInterval(function () {
-            getData();
-        }, 1000);
+
     })();
 </script>
 </html>
