@@ -8,10 +8,12 @@
 </head>
 <body>
 <div class="container">
-    <h1>Lubny chat</h1>
+    <div class="form-group">
+        <h1>Lubny chat</h1>
+    </div>
     <div>
         <input type="text" placeholder="Your name" id="nameInput">
-        <button type="button" class="btn btn-info" id="nameButton" >Ok</button>
+        <button type="button" class="btn btn-info" id="nameButton">Ok</button>
     </div>
     <div class="well">
         <ul id="messages"></ul>
@@ -77,14 +79,15 @@
                 url: '/messages',
                 method: 'GET',
                 callback: function (msg) {
+                    //console.log("Befor parsing: ", msg);
                     var msg = JSON.parse(msg);
+                    //console.log("After parsing: ", msg);
                     messages.innerHTML = '';
                     for (var i in msg) {
                         if (msg.hasOwnProperty(i)) {
                             var el = document.createElement('li');
                             el.innerText = msg[i].name + ': ' + msg[i].data;
                             messages.appendChild(el);
-
                         }
                     }
 
