@@ -19,7 +19,6 @@
     <div class="well">
         <ul id="messages"></ul>
     </div>
-
     <form>
         <div class="form-group">
             <label for="text">Comment:</label>
@@ -27,8 +26,6 @@
             <button type="button" class="btn btn-success" id="textSubmit">Send</button>
         </div>
     </form>
-
-
 </div>
 </body>
 <script type="text/javascript">
@@ -56,39 +53,19 @@
             socket.emit('chat message', data);
         };
 
-        socket.on('chat history', function (messages) {
-
+        socket.on('chat history', function (msg) {
+            for (var i in msg) {
+                var el = document.createElement('li');
+                el.innerText = msg[i].name + '==:> ' + msg[i].data;
+                messages.appendChild(el);
+            }
         });
 
         socket.on('chat message', function (msg) {
-
+            var el = document.createElement('li');
+            el.innerText = msg.name + '::: ' + msg.data;
+            messages.appendChild(el);
         });
-
-
-
-        var getData = function () {
-            ajaxRequest({
-                url: '/messages',
-                method: 'GET',
-                callback: function (msg) {
-                    //console.log("Befor parsing: ", msg);
-                    var msg = JSON.parse(msg);
-                    //console.log("After parsing: ", msg);
-                    messages.innerHTML = '';
-                    for (var i in msg) {
-                        if (msg.hasOwnProperty(i)) {
-                            var el = document.createElement('li');
-                            el.innerText = msg[i].name + ': ' + msg[i].data;
-                            messages.appendChild(el);
-                        }
-                    }
-
-                }
-            })
-
-        }
-
-
     })();
 </script>
 </html>

@@ -17,22 +17,9 @@ app.get('/', function (req, res) {
     res.sendFile(staticDir + 'index.html');
 });
 
-app.get('/messages', function(req, res){
-    res.json(messages);
-});
-
-app.post('/messages', function(req, res){
-    var message = req.body;
-    messages.push(message);
-    res.json(messages);
-});
-
-app.get('/sockets', function(req, res){
-    res.sendFile(staticDir + 'index.html');
-});
-
 io.on('connection', function (socket) {
     console.log("Client Connected ");
+   // console.log(socket.handshake.url);
     socket.on('disconnected', function(){
         console.log("Client Disconnected ");
     });
